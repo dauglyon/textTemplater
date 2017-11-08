@@ -49,9 +49,6 @@ var default_placeholders = {
 }
 var variable_li = '<li><a href="#" class="ttph_add-ph" ph-type="{NAME}"><span class="glyphicon glyphicon-usd"></span>&nbsp;&nbsp;{NAME}</a></li>';
 
-function textTemplater(variables){
-    
-}
 
 ex.builder = function(selector,variables){
     var parent = $(selector);
@@ -90,7 +87,7 @@ ex.filler = function(selector,templateString){
     var form = $(formHTML).appendTo(parent);
     
     var formhtml = templateString
-        .replace(/(^[^{}]+|}[^{}]+?{|[^{}]+$)/g, function(staticText){
+        .replace(/(^|})[^{}]+?({|$)/g, function(staticText){
             var html = staticText.replace(/[^{}]+/g, function(nobrackets){
                 var esc_text = nobrackets.replace(/&/g,"&amp;")
                     .replace(/\ /g,"&nbsp;")
