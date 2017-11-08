@@ -24,7 +24,7 @@ var fields = {
         <input type="text" name="__text__" class="form-control">
     </div>`,
     'variable':`<span disabled class="ttph_variable-field btn btn-default ttph_btn-static"><strong>$ {NAME}</strong><input type="hidden" name="{NAME}"></span>`,
-    'static':`<span class="ttph_static-field">{TEXT}<input type="hidden" name="__text__" value="{ESC_TEXT}"></span>`
+    'static':`<span class="ttph_static-field">{ESC_TEXT}<input type="hidden" name="__text__" value="{TEXT}"></span>`
 }
 var default_placeholders = {
     'statictext':`<div class="btn-group ttph_group" role="group" aria-label="...">
@@ -92,12 +92,14 @@ ex.filler = function(selector,templateString){
     var formhtml = templateString
         .replace(/(^[^{}]+|}[^{}]+?{|[^{}]+$)/g, function(staticText){
             var html = staticText.replace(/[^{}]+/g, function(nobrackets){
-                var text = nobrackets.replace(/&/g,"&amp;")
+                var esc_text = nobrackets.replace(/&/g,"&amp;")
                     .replace(/\ /g,"&nbsp;")
                     .replace(/</g,"&lt;")
                     .replace(/>/g,"&gt;");
+                var text = nobrackets.replace(/\"/g,'\\"').replace(/\'/g,"\\'");
                 return fields["static"]
                     .replace(/\n\s*/g,"")
+                    .replace(/{ESC_TEXT}/g,esc_text)
                     .replace(/{TEXT}/g,text);
             });
             return html;
@@ -127,8 +129,15 @@ ex.filler = function(selector,templateString){
     return {
         'form':form,
         'fillTemplate':function(variables){
-            console.log(form.serializeArray());
-            return;
+            result = ""
+            form.serializeArray().forEach(function(field){
+                if (field.name=="__text__") result+=field.value;
+                else {
+                    if(variables[field.name]===undefined) throw field.name+" not provided.";
+                    result+=variables[field.name];
+                }
+            });
+            return result;
         }
     }
 }

@@ -52,7 +52,11 @@
                 $("#done_text").val(tstring);
                 var filler = textTemplater.filler("#fillhere",tstring);
                 $("#done2").show().click(function(){
-                    var result = filler.fillTemplate();
+                    var result = filler.fillTemplate({
+                        "Year":"1948",
+                        "Location":"The Moon",
+                        "Another Variable":"It's Jelly!"
+                    });
                     $("#done_text2").val(result);
                 });
             })
