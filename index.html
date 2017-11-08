@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>textTemplater</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <style media="screen">
+            .main-content{
+                margin-top: 3em;
+            }
+        </style>
+        <link rel="stylesheet" href="textTemplater.css">
+    </head>
+    <body>
+        <div class="main-content container">
+            <div class="row">
+                <div id="genhere" class="col-md-12"></div>
+                <div class="col-md-1">
+                    <button id="done" type="button" name="button" class="btn-primary btn">Done</button>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-md-12">
+                    <input type="text" class="form-control" name="" id="done_text" value="" size="30">
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div id="fillhere" class="col-md-12"></div>
+                <div class="col-md-1">
+                    <button id="done2" type="button" name="button" class="btn-primary btn">Done</button>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-md-12">
+                    <input type="text" class="form-control" name="" id="done_text2" value="" size="30">
+                </div>
+            </div>
+        </div>
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" charset="utf-8"></script>
+        <script src="textTemplater.js" charset="utf-8"></script>
+        <script type="text/javascript">
+        $(document).ready(function() {
+            var builder = textTemplater.builder("#genhere",["Year","Location","Another Variable"]);
+            $("#done2").hide();
+            $("#done").click(function(){
+                var tstring = builder.getTemplate();
+                $("#done_text").val(tstring);
+                var filler = textTemplater.filler("#fillhere",tstring);
+                $("#done2").show().click(function(){
+                    var result = filler.fillTemplate();
+                    $("#done_text2").val(result);
+                });
+            })
+        });
+        </script>
+    </body>
+</html>
