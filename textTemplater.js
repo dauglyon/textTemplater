@@ -19,32 +19,29 @@ var forms = {
      'fill-form':`<form class="ttph_fill-form form-inline"></form>`
 }
 var fields = {
-    'textfield':`<div class="ttph_textfield-field input-group">
-        <div class="input-group-addon">{NAME}</div>
-        <input type="text" name="__text__" class="form-control">
+    'textfield':`<div class="btn-group ttph_group" role="group" aria-label="...">
+        <span disabled class="btn btn-default ttph_btn-static">{NAME}</span>
+        <input type="text" class="form-control ttph_text" name="__statictext__">
     </div>`,
     'variable':`<span disabled class="ttph_variable-field btn btn-default ttph_btn-static"><strong>$ {NAME}</strong><input type="hidden" name="{NAME}"></span>`,
-    'static':`<span class="ttph_static-field">{ESC_TEXT}<input type="hidden" name="__text__" value="{TEXT}"></span>`
+    'static':`<span class="ttph_static-field">{ESC_TEXT}<input type="hidden" name="__statictext__" value="{TEXT}"></span>`
 }
 var default_placeholders = {
     'statictext':`<div class="btn-group ttph_group" role="group" aria-label="...">
             <span disabled class="btn btn-default ttph_btn-static"><span class="glyphicon glyphicon-font"></span></span>
             <input type="text" class="form-control ttph_text" name="statictext" placeholder="Static Text">
             <button type="button" tabindex="-1" class="btn ttph_remove btn-danger"><span class="glyphicon glyphicon-remove"></span></button>
-            &nbsp;
         </div>`,
     'textfield':`<div class="btn-group ttph_group" role="group" aria-label="...">
             <span disabled class="btn btn-default ttph_btn-static"><span class="glyphicon glyphicon-edit"></span></span>
             <input type="text" class="form-control ttph_text" name="textfield" placeholder="Field Name">
             <button type="button" tabindex="-1" class="btn ttph_remove btn-danger"><span class="glyphicon glyphicon-remove"></span></button>
-            &nbsp;
         </div>`,
     '__variable':`<div class="btn-group ttph_group" role="group" aria-label="...">
             <span disabled class="btn btn-default ttph_btn-static"><span class="glyphicon glyphicon-usd"></span></span>
             <span disabled class="btn btn-default ttph_btn-static"><strong>{NAME}</strong></span>
             <input type="hidden" hidden name="variable" value="{NAME}">
             <button type="button" tabindex="-1" class="btn ttph_remove btn-danger"><span class="glyphicon glyphicon-remove"></span></button>
-            &nbsp;
         </div>`,
 }
 var variable_li = '<li><a href="#" class="ttph_add-ph" ph-type="{NAME}"><span class="glyphicon glyphicon-usd"></span>&nbsp;&nbsp;{NAME}</a></li>';
@@ -75,7 +72,7 @@ ex.builder = function(selector,variables){
     
     reset_ph_handlers();
     return {
-        'form':form,
+        'form':function(){return form.get(0);},
         'getTemplate':function(){return create_format_string(form.serializeArray());}
     }
 }
@@ -102,7 +99,7 @@ ex.filler = function(selector,templateString){
             return html;
         })
         .replace(/\{.+?\}/g, function(placeholder){
-            ph_name = placeholder.replace(/^\{|\}$/g,'');
+            var ph_name = placeholder.replace(/^\{|\}$/g,'');
             if(ph_name.slice(0,9)=="__FIELD__"){
                 // is a editable field
                 ph_name = ph_name.slice(9)
@@ -124,20 +121,28 @@ ex.filler = function(selector,templateString){
         });
     form.html(formhtml);
     return {
-        'form':form,
-        'fillTemplate':function(variables){
+        'form':function(){return form.get(0);},
+        'getFilledTemplate':function(){
             result = ""
             form.serializeArray().forEach(function(field){
-                if (field.name=="__text__") result+=field.value;
+                if (field.name=="__statictext__") result+=field.value;
                 else {
-                    if(variables[field.name]===undefined) throw field.name+" not provided.";
-                    result+=variables[field.name];
+                    result+="{"+field.name+"}";
                 }
             });
             return result;
         }
     }
-}
+};
+
+ex.populateTemplate = function(tempalteString, variables){
+    result = tempalteString.replace(/\{.+?\}/g, function(placeholder){
+        var ph_name = placeholder.replace(/^\{|\}$/g,'');
+        if(variables[ph_name]===undefined) return placeholder;
+        return variables[ph_name];
+    })
+    return result;
+};
 
 function reset_ph_handlers() {
     $('.ttph_group-wrapper').sortable();

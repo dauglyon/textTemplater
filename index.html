@@ -14,10 +14,7 @@
     <body>
         <div class="main-content container">
             <div class="row">
-                <div id="genhere" class="col-md-12"></div>
-                <div class="col-md-1">
-                    <button id="done" type="button" name="button" class="btn-primary btn">Done</button>
-                </div>
+                <div class="col-md-12"><span id="genhere"></span> <button id="done" type="button" name="button" class="btn-primary btn">Done</button></div>
             </div>
             <hr>
             <div class="row">
@@ -27,15 +24,17 @@
             </div>
             <hr>
             <div class="row">
-                <div id="fillhere" class="col-md-12"></div>
-                <div class="col-md-1">
-                    <button id="done2" type="button" name="button" class="btn-primary btn">Done</button>
-                </div>
+                <div class="col-md-12"><span id="fillhere"></span> <button id="done2" type="button" name="button" class="btn-primary btn">Done</button></div>
             </div>
             <hr>
             <div class="row">
                 <div class="col-md-12">
                     <input type="text" class="form-control" name="" id="done_text2" value="" size="30">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <input type="text" class="form-control" name="" id="done_text3" value="" size="30">
                 </div>
             </div>
         </div>
@@ -52,12 +51,14 @@
                 $("#done_text").val(tstring);
                 var filler = textTemplater.filler("#fillhere",tstring);
                 $("#done2").show().click(function(){
-                    var result = filler.fillTemplate({
+                    var result1 = filler.getFilledTemplate();
+                    $("#done_text2").val(result1);
+                    var result2 = textTemplater.populateTemplate(result1,{
                         "Year":"1948",
-                        "Location":"The Moon",
+                        // "Location":"The Moon",
                         "Another Variable":"It's Jelly!"
                     });
-                    $("#done_text2").val(result);
+                    $("#done_text3").val(result2);
                 });
             })
         });
