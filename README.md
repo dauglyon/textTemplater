@@ -27,3 +27,16 @@ Returns the DOM node of the template-filling form.
 
 <a name="filler-getTemplate" href="#filler-getTemplate">#</a> _filler_.**getTemplate**()  
 Returns the template representation of the contents of the template-filling form. For example, `Foo-{Year}` would be returned for the configuration above.
+
+<a name="populateTemplate" href="#populateTemplate">#</a> _textTemplater_.**populateTemplate**(_templateString_, _template_)  
+Given a template string _templateString_ and an object _template_ with `{'variable':'value'}` key/value pairs, this function populates the template with the given strings and returns the populated string.
+
+## Perl
+
+Functionality is contained with the _TextTemplater_ package.
+
+<a name="perlPopulate" href="#perlPopulate">#</a> _TextTemplater_::**populate**(_templateString_, _template_)  
+Given a template string _templateString_ and a hashref _template_ with `{'variable':'value'}` key/value pairs, this function populates the template with the given strings and returns the populated string.
+
+<a name="perlVariables" href="#perlVariables">#</a> _TextTemplater_::**variables**(_templateString_)  
+Given a template string _templateString_ returns an array of variable name strings.
